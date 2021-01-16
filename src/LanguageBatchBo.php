@@ -12,15 +12,15 @@ class LanguageBatchBo
 	 *
 	 * @var array
 	 */
-	protected static $applications = array();
-	protected static $systemPathRoot;
-	protected static IApiCall $apiCall;
+	protected $applications = array();
+	protected $systemPathRoot;
+	protected IApiCall $apiCall;
 
 	public function __construct()
     {
-        self::$applications = Config::get('system.translated_applications');
-        self::$systemPathRoot=Config::get('system.paths.root');
-        self::$apiCall=new ApiCallAdapter();
+        $this->applications = Config::get('system.translated_applications');
+        $this->systemPathRoot=Config::get('system.paths.root');
+        $this->apiCall=new ApiCallAdapter();
     }
 
     /**
@@ -28,17 +28,17 @@ class LanguageBatchBo
 	 *
 	 * @return void
 	 */
-	public static function generateLanguageFiles()
+	public function generateLanguageFiles()
 	{
 		// The applications where we need to translate.
 
 
 		echo "\nGenerating language files\n";
-		foreach (self::$applications as $application => $languages) {
+		foreach ($this->applications as $application => $languages) {
 			echo "[APPLICATION: " . $application . "]\n";
 			foreach ($languages as $language) {
 				echo "\t[LANGUAGE: " . $language . "]";
-				if (self::getLanguageFile($application, $language)) {
+				if ($this->getLanguageFile($application, $language)) {
 					echo " OK\n";
 				}
 				else {
@@ -58,10 +58,10 @@ class LanguageBatchBo
 	 *
 	 * @return bool   The success of the operation.
 	 */
-	protected static function getLanguageFile($application, $language)
+	protected function getLanguageFile($application, $language)
 	{
 		$result = false;
-		$languageResponse = self::$apiCall->call(
+		$languageResponse = $this->apiCall->call(
 		    'system_api',
             'language_api',
             array(
@@ -71,14 +71,14 @@ class LanguageBatchBo
             array('language' => $language));
 
 		try {
-			self::checkForApiErrorResult($languageResponse);
+			$this->checkForApiErrorResult($languageResponse);
 		}
 		catch (\Exception $e) {
 			throw new \Exception('Error during getting language file: (' . $application . '/' . $language . ')');
 		}
 
 		// If we got correct data we store it.
-		$destination = self::getLanguageCachePath($application) . $language . '.php';
+		$destination = $this->getLanguageCachePath($application) . $language . '.php';
 		// If there is no folder yet, we'll create it.
 		var_dump($destination);
 		if (!is_dir(dirname($destination))) {
@@ -97,9 +97,9 @@ class LanguageBatchBo
 	 *
 	 * @return string   The directory of the cached language files.
 	 */
-	protected static function getLanguageCachePath($application)
+	protected function getLanguageCachePath($application)
 	{
-		return self::$systemPathRoot . '/cache/' . $application. '/';
+		return $this->systemPathRoot . '/cache/' . $application. '/';
 	}
 
 	/**
@@ -109,7 +109,7 @@ class LanguageBatchBo
 	 *
 	 * @return void
 	 */
-	public static function generateAppletLanguageXmlFiles()
+	public function generateAppletLanguageXmlFiles()
 	{
 		// List of the applets [directory => applet_id].
 		$applets = array(
@@ -120,16 +120,16 @@ class LanguageBatchBo
 
 		foreach ($applets as $appletDirectory => $appletLanguageId) {
 			echo " Getting > $appletLanguageId ($appletDirectory) language xmls..\n";
-			$languages = self::getAppletLanguages($appletLanguageId);
+			$languages = $this->getAppletLanguages($appletLanguageId);
 			if (empty($languages)) {
 				throw new \Exception('There is no available languages for the ' . $appletLanguageId . ' applet.');
 			}
 			else {
 				echo ' - Available languages: ' . implode(', ', $languages) . "\n";
 			}
-			$path = self::$systemPathRoot . '/cache/flash';
+			$path = $this->systemPathRoot . '/cache/flash';
 			foreach ($languages as $language) {
-				$xmlContent = self::getAppletLanguageFile($appletLanguageId, $language);
+				$xmlContent = $this->getAppletLanguageFile($appletLanguageId, $language);
 				$xmlFile    = $path . '/lang_' . $language . '.xml';
 				if (strlen($xmlContent) == file_put_contents($xmlFile, $xmlContent)) {
 					echo " OK saving $xmlFile was successful.\n";
@@ -152,9 +152,9 @@ class LanguageBatchBo
 	 *
 	 * @return array   The list of the available applet languages.
 	 */
-	protected static function getAppletLanguages($applet)
+	protected function getAppletLanguages($applet)
 	{
-		$result = self::$apiCall->call(
+		$result = $this->apiCall->call(
 		    'system_api',
             'language_api',
             array(
@@ -164,7 +164,7 @@ class LanguageBatchBo
             array('applet' => $applet));
 
 		try {
-			self::checkForApiErrorResult($result);
+			$this->checkForApiErrorResult($result);
 		}
 		catch (\Exception $e) {
 			throw new \Exception('Getting languages for applet (' . $applet . ') was unsuccessful ' . $e->getMessage());
@@ -182,9 +182,9 @@ class LanguageBatchBo
 	 *
 	 * @return string|false   The content of the language file or false if weren't able to get it.
 	 */
-	protected static function getAppletLanguageFile($applet, $language)
+	protected function getAppletLanguageFile($applet, $language)
 	{
-		$result = self::$apiCall->call(
+		$result = $this->apiCall->call(
             'system_api',
             'language_api',
             array(
@@ -198,7 +198,7 @@ class LanguageBatchBo
         );
 
 		try {
-			self::checkForApiErrorResult($result);
+			$this->checkForApiErrorResult($result);
 		}
 		catch (\Exception $e) {
 			throw new \Exception('Getting language xml for applet: (' . $applet . ') on language: (' . $language . ') was unsuccessful: '
@@ -217,7 +217,7 @@ class LanguageBatchBo
 	 *
 	 * @return void
 	 */
-	protected static function checkForApiErrorResult($result)
+	protected function checkForApiErrorResult($result)
 	{
 		// Error during the api call.
 		if ($result === false || !isset($result['status'])) {
