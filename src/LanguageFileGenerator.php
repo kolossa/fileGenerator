@@ -15,6 +15,7 @@ class LanguageFileGenerator implements ILanguageFileGenerator
     private string $systemPathRoot;
     private IApiCall $apiCall;
     private ApiValidator $apiValidator;
+    private ILogger $logger;
 
     /**
      * LanguageFileGenerator constructor.
@@ -22,17 +23,20 @@ class LanguageFileGenerator implements ILanguageFileGenerator
      * @param string $systemPathRoot
      * @param IApiCall $apiCall
      * @param ApiValidator $apiValidator
+     * @param ILogger $logger
      */
     public function __construct(
         array $applications,
         string $systemPathRoot,
         IApiCall $apiCall,
-        ApiValidator $apiValidator
+        ApiValidator $apiValidator,
+        ILogger $logger
     ) {
         $this->applications = $applications;
         $this->systemPathRoot = $systemPathRoot;
         $this->apiCall = $apiCall;
         $this->apiValidator = $apiValidator;
+        $this->logger = $logger;
     }
 
 
@@ -46,18 +50,19 @@ class LanguageFileGenerator implements ILanguageFileGenerator
         // The applications where we need to translate.
 
 
-        echo PHP_EOL . 'Generating language files' . PHP_EOL;
+        $this->logger->info('Generating language files');
         foreach ($this->applications as $application => $languages) {
-            echo '[APPLICATION: ' . $application . ']' . PHP_EOL;
+            $this->logger->info('[APPLICATION: ' . $application . '] started');
             foreach ($languages as $language) {
-                echo "\t" . '[LANGUAGE: ' . $language . ']';
+                $this->logger->info('[APPLICATION: ' . $application . '][LANGUAGE: ' . $language . ']');
                 if ($this->getLanguageFile($application, $language)) {
-                    echo ' OK' . PHP_EOL;
+                    $this->logger->info('[APPLICATION: ' . $application . '][LANGUAGE: ' . $language . '] OK');
                 } else {
                     throw new \Exception('Unable to generate language file!');
                 }
             }
         }
+        $this->logger->info('Generating language files - end');
     }
 
     /**
@@ -77,7 +82,7 @@ class LanguageFileGenerator implements ILanguageFileGenerator
         // If we got correct data we store it.
         $destination = $this->getLanguageCachePath($application) . $language . '.php';
         // If there is no folder yet, we'll create it.
-        echo $destination . ' ';
+        $this->logger->info('[APPLICATION: ' . $application . '][LANGUAGE: ' . $language . '] ' . $destination);
         if (!is_dir(dirname($destination))) {
             mkdir(dirname($destination), 0755, true);
         }

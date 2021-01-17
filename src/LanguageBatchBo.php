@@ -19,15 +19,17 @@ class LanguageBatchBo
         $applets = [
             'memberapplet' => 'JSM2_MemberApplet',
         ];
+        $logger = new MonologAdapter();
 
         $this->languageFileGenerator = new LanguageFileGenerator(
-            $applications, $systemPathRoot, $apiCall, $apiValidator
+            $applications, $systemPathRoot, $apiCall, $apiValidator, $logger
         );
         $this->languageXmlFileGenerator = new LanguageXmlFileGenerator(
             $systemPathRoot,
             $apiCall,
             $apiValidator,
-            $applets
+            $applets,
+            $logger
         );
     }
 

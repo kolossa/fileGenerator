@@ -3,5 +3,12 @@
     "description": "PHP refactoring",
     "autoload": {
         "psr-4": {"Language\\": "src/"}
+    },
+    "require": {
+        "php": "^7.4",
+        "monolog/monolog": "^2.2"
+    },
+    "require-dev": {
+        "phpstan/phpstan": "^0.12.67"
     }
 }
