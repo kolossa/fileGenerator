@@ -11,10 +11,10 @@ class LanguageFileGenerator implements ILanguageFileGenerator
      *
      * @var array
      */
-    protected array $applications = array();
-    protected string $systemPathRoot;
-    protected IApiCall $apiCall;
-    protected ApiValidator $apiValidator;
+    private array $applications = [];
+    private string $systemPathRoot;
+    private IApiCall $apiCall;
+    private ApiValidator $apiValidator;
 
     /**
      * LanguageFileGenerator constructor.
@@ -46,13 +46,13 @@ class LanguageFileGenerator implements ILanguageFileGenerator
         // The applications where we need to translate.
 
 
-        echo "\nGenerating language files\n";
+        echo PHP_EOL . 'Generating language files' . PHP_EOL;
         foreach ($this->applications as $application => $languages) {
-            echo "[APPLICATION: " . $application . "]\n";
+            echo '[APPLICATION: ' . $application . ']' . PHP_EOL;
             foreach ($languages as $language) {
-                echo "\t[LANGUAGE: " . $language . "]";
+                echo "\t" . '[LANGUAGE: ' . $language . ']';
                 if ($this->getLanguageFile($application, $language)) {
-                    echo " OK\n";
+                    echo ' OK' . PHP_EOL;
                 } else {
                     throw new \Exception('Unable to generate language file!');
                 }
@@ -70,29 +70,14 @@ class LanguageFileGenerator implements ILanguageFileGenerator
      * @throws CurlException   If there was an error during the download of the language file.
      *
      */
-    protected function getLanguageFile($application, $language): bool
+    private function getLanguageFile(string $application, string $language): bool
     {
         $result = false;
-        $languageResponse = $this->apiCall->call(
-            'system_api',
-            'language_api',
-            array(
-                'system' => 'LanguageFiles',
-                'action' => 'getLanguageFile'
-            ),
-            array('language' => $language)
-        );
-
-        try {
-            $this->apiValidator->checkForApiErrorResult($languageResponse);
-        } catch (\Exception $e) {
-            throw new \Exception('Error during getting language file: (' . $application . '/' . $language . ')');
-        }
-
+        $languageResponse = $this->getValidFileContent($application, $language);
         // If we got correct data we store it.
         $destination = $this->getLanguageCachePath($application) . $language . '.php';
         // If there is no folder yet, we'll create it.
-        var_dump($destination);
+        echo $destination . ' ';
         if (!is_dir(dirname($destination))) {
             mkdir(dirname($destination), 0755, true);
         }
@@ -102,6 +87,27 @@ class LanguageFileGenerator implements ILanguageFileGenerator
         return (bool)$result;
     }
 
+    private function getValidFileContent(string $application, string $language): array
+    {
+        $languageResponse = $this->apiCall->call(
+            ApiCallAdapter::TARGET,
+            ApiCallAdapter::MODE,
+            [
+                'system' => 'LanguageFiles',
+                'action' => 'getLanguageFile'
+            ],
+            ['language' => $language]
+        );
+
+        try {
+            $this->apiValidator->checkForApiErrorResult($languageResponse);
+        } catch (\Exception $e) {
+            throw new \Exception('Error during getting language file: (' . $application . '/' . $language . ')');
+        }
+
+        return $languageResponse;
+    }
+
     /**
      * Gets the directory of the cached language files.
      *
@@ -109,7 +115,7 @@ class LanguageFileGenerator implements ILanguageFileGenerator
      *
      * @return string   The directory of the cached language files.
      */
-    protected function getLanguageCachePath($application)
+    private function getLanguageCachePath(string $application): string
     {
         return $this->systemPathRoot . '/cache/' . $application . '/';
     }

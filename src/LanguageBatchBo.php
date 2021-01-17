@@ -15,10 +15,20 @@ class LanguageBatchBo
         $applications = Config::get('system.translated_applications');
         $systemPathRoot = Config::get('system.paths.root');
         $apiCall = new ApiCallAdapter();
-        $apiValidator=new ApiValidator();
+        $apiValidator = new ApiValidator();
+        $applets = [
+            'memberapplet' => 'JSM2_MemberApplet',
+        ];
 
-        $this->languageFileGenerator = new LanguageFileGenerator($applications, $systemPathRoot, $apiCall, $apiValidator);
-        $this->languageXmlFileGenerator = new LanguageXmlFileGenerator($systemPathRoot, $apiCall, $apiValidator);
+        $this->languageFileGenerator = new LanguageFileGenerator(
+            $applications, $systemPathRoot, $apiCall, $apiValidator
+        );
+        $this->languageXmlFileGenerator = new LanguageXmlFileGenerator(
+            $systemPathRoot,
+            $apiCall,
+            $apiValidator,
+            $applets
+        );
     }
 
     /**
