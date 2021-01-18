@@ -23,4 +23,14 @@ class MonologAdapter implements ILogger
     {
         $this->logger->info($message, $context);
     }
+
+    public function warning(string $message, array $context = []): void
+    {
+        $this->logger->warning($message, $context);
+    }
+
+    public function error($message, array $context = []): void
+    {
+        $this->logger->error($message, $context);
+    }
 }

@@ -77,19 +77,24 @@ class LanguageFileGenerator implements ILanguageFileGenerator
      */
     private function getLanguageFile(string $application, string $language): bool
     {
-        $result = false;
         $languageResponse = $this->getValidFileContent($application, $language);
         // If we got correct data we store it.
-        $destination = $this->getLanguageCachePath($application) . $language . '.php';
+        $path = $this->getLanguageCachePath($application);
+        if (is_dir($path) && !is_writable($path)) {
+            throw new \Exception($path . ' is not writable!');
+        }
+        $destination = $path . $language . '.php';
         // If there is no folder yet, we'll create it.
         $this->logger->info('[APPLICATION: ' . $application . '][LANGUAGE: ' . $language . '] ' . $destination);
         if (!is_dir(dirname($destination))) {
             mkdir(dirname($destination), 0755, true);
         }
 
-        $result = file_put_contents($destination, $languageResponse['data']);
+        if (file_put_contents($destination, $languageResponse['data']) === false) {
+            return false;
+        }
 
-        return (bool)$result;
+        return true;
     }
 
     private function getValidFileContent(string $application, string $language): array
@@ -107,7 +112,9 @@ class LanguageFileGenerator implements ILanguageFileGenerator
         try {
             $this->apiValidator->checkForApiErrorResult($languageResponse);
         } catch (\Exception $e) {
-            throw new \Exception('Error during getting language file: (' . $application . '/' . $language . ')');
+            throw new \Exception(
+                'Error during getting language file: (' . $application . '/' . $language . '): ' . $e->getMessage()
+            );
         }
 
         return $languageResponse;

@@ -4,6 +4,10 @@
 namespace Language;
 
 
+use Language\exceptions\ApiCallErrorException;
+use Language\exceptions\ApiCallWrongContentException;
+use Language\exceptions\ApiCallWrongResponseException;
+
 class ApiValidator
 {
     /**
@@ -12,18 +16,20 @@ class ApiValidator
      * @param mixed $result The api call result to check.
      *
      * @return void
-     * @throws Exception   If the api call was not successful.
      *
+     * @throws ApiCallErrorException
+     * @throws ApiCallWrongContentException
+     * @throws ApiCallWrongResponseException
      */
-    public function checkForApiErrorResult($result):void
+    public function checkForApiErrorResult($result): void
     {
         // Error during the api call.
         if ($result === false || !isset($result['status'])) {
-            throw new \Exception('Error during the api call');
+            throw new ApiCallErrorException('Error during the api call');
         }
         // Wrong response.
         if ($result['status'] != 'OK') {
-            throw new \Exception(
+            throw new ApiCallWrongResponseException(
                 'Wrong response: '
                 . (!empty($result['error_type']) ? 'Type(' . $result['error_type'] . ') ' : '')
                 . (!empty($result['error_code']) ? 'Code(' . $result['error_code'] . ') ' : '')
@@ -32,7 +38,7 @@ class ApiValidator
         }
         // Wrong content.
         if ($result['data'] === false) {
-            throw new \Exception('Wrong content!');
+            throw new ApiCallWrongContentException('Wrong content!');
         }
     }
 }

@@ -7,8 +7,9 @@ namespace Language;
  */
 class LanguageBatchBo
 {
-    protected ILanguageFileGenerator $languageFileGenerator;
-    protected ILanguageXmlFileGenerator $languageXmlFileGenerator;
+    private ILanguageFileGenerator $languageFileGenerator;
+    private ILanguageXmlFileGenerator $languageXmlFileGenerator;
+    private ILogger $logger;
 
     public function __construct()
     {
@@ -19,17 +20,17 @@ class LanguageBatchBo
         $applets = [
             'memberapplet' => 'JSM2_MemberApplet',
         ];
-        $logger = new MonologAdapter();
+        $this->logger = new MonologAdapter();
 
         $this->languageFileGenerator = new LanguageFileGenerator(
-            $applications, $systemPathRoot, $apiCall, $apiValidator, $logger
+            $applications, $systemPathRoot, $apiCall, $apiValidator, $this->logger
         );
         $this->languageXmlFileGenerator = new LanguageXmlFileGenerator(
             $systemPathRoot,
             $apiCall,
             $apiValidator,
             $applets,
-            $logger
+            $this->logger
         );
     }
 
@@ -40,18 +41,25 @@ class LanguageBatchBo
      */
     public function generateLanguageFiles(): void
     {
-        $this->languageFileGenerator->generateLanguageFiles();
+        try {
+            $this->languageFileGenerator->generateLanguageFiles();
+        }catch (\Exception $e){
+            $this->logger->error($e->getMessage());
+        }
     }
 
     /**
      * Gets the language files for the applet and puts them into the cache.
      *
      * @return void
-     * @throws Exception   If there was an error.
      *
      */
     public function generateAppletLanguageXmlFiles(): void
     {
-        $this->languageXmlFileGenerator->generateAppletLanguageXmlFiles();
+        try {
+            $this->languageXmlFileGenerator->generateAppletLanguageXmlFiles();
+        } catch (\Exception $e) {
+            $this->logger->error($e->getMessage());
+        }
     }
 }

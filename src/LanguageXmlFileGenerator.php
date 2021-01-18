@@ -43,19 +43,24 @@ class LanguageXmlFileGenerator implements ILanguageXmlFileGenerator
     {
         $this->logger->info('Getting applet language XMLs started');
 
+        $path = $this->getLanguageFlashPath();
+        if (is_dir($path) && !is_writable($path)) {
+            throw new \Exception($path . ' is not writable!');
+        }
         foreach ($this->applets as $appletDirectory => $appletLanguageId) {
-            $this->logger->info(' Getting > ' . $appletLanguageId . ' (' . $appletDirectory . ') language xmls..');
+            $this->logger->info('Getting > ' . $appletLanguageId . ' (' . $appletDirectory . ') language xmls..');
             $languages = $this->getAppletLanguages($appletLanguageId);
             if (empty($languages)) {
-                throw new \Exception('There is no available languages for the ' . $appletLanguageId . ' applet.');
+                $this->logger->warning('There are no available languages for the ' . $appletLanguageId . ' applet.');
             } else {
                 $this->logger->info('Available languages: ' . implode(', ', $languages));
             }
-            $path = $this->getLanguageFlashPath();
+
             foreach ($languages as $language) {
-                $xmlContent = $this->getAppletLanguageFile($appletLanguageId, $language);
+                $xmlContent = $this->getAppletLanguageFileContent($appletLanguageId, $language);
                 $xmlFile = $path . '/lang_' . $language . '.xml';
-                if (strlen($xmlContent) == file_put_contents($xmlFile, $xmlContent)) {
+
+                if (file_put_contents($xmlFile, $xmlContent) !== false) {
                     $this->logger->info('OK saving ' . $xmlFile . ' was successful.');
                 } else {
                     throw new \Exception(
@@ -80,8 +85,9 @@ class LanguageXmlFileGenerator implements ILanguageXmlFileGenerator
      * @param string $applet The applet identifier.
      *
      * @return array   The list of the available applet languages.
+     * @throws \Exception
      */
-    private function getAppletLanguages(string $applet)
+    private function getAppletLanguages(string $applet): array
     {
         $result = $this->apiCall->call(
             ApiCallAdapter::TARGET,
@@ -108,9 +114,10 @@ class LanguageXmlFileGenerator implements ILanguageXmlFileGenerator
      * @param string $applet The identifier of the applet.
      * @param string $language The language identifier.
      *
-     * @return string|false   The content of the language file or false if weren't able to get it.
+     * @return string  The content of the language file
+     * @throws \Exception
      */
-    private function getAppletLanguageFile(string $applet, string $language)
+    private function getAppletLanguageFileContent(string $applet, string $language): string
     {
         $result = $this->apiCall->call(
             ApiCallAdapter::TARGET,
