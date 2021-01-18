@@ -8,7 +8,7 @@ namespace Language;
 class LanguageBatchBo
 {
     private ILanguageFileGenerator $languageFileGenerator;
-    private ILanguageXmlFileGenerator $languageXmlFileGenerator;
+    private ILanguageFileGenerator $languageXmlFileGenerator;
     private ILogger $logger;
 
     public function __construct()
@@ -57,7 +57,7 @@ class LanguageBatchBo
     public function generateAppletLanguageXmlFiles(): void
     {
         try {
-            $this->languageXmlFileGenerator->generateAppletLanguageXmlFiles();
+            $this->languageXmlFileGenerator->generateLanguageFiles();
         } catch (\Exception $e) {
             $this->logger->error($e->getMessage());
         }

@@ -3,7 +3,7 @@
 
 namespace Language;
 
-class LanguageXmlFileGenerator implements ILanguageXmlFileGenerator
+class LanguageXmlFileGenerator implements ILanguageFileGenerator
 {
     private string $systemPathRoot;
     private IApiCall $apiCall;
@@ -39,7 +39,7 @@ class LanguageXmlFileGenerator implements ILanguageXmlFileGenerator
     }
 
 
-    public function generateAppletLanguageXmlFiles(): void
+    public function generateLanguageFiles(): void
     {
         $this->logger->info('Getting applet language XMLs started');
 
