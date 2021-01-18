@@ -57,21 +57,26 @@ class LanguageXmlFileGenerator implements ILanguageFileGenerator
             }
 
             foreach ($languages as $language) {
-                $xmlContent = $this->getAppletLanguageFileContent($appletLanguageId, $language);
-                $xmlFile = $path . '/lang_' . $language . '.xml';
-
-                if (file_put_contents($xmlFile, $xmlContent) !== false) {
-                    $this->logger->info('OK saving ' . $xmlFile . ' was successful.');
-                } else {
-                    throw new \Exception(
-                        'Unable to save applet: (' . $appletLanguageId . ') language: (' . $language
-                        . ') xml (' . $xmlFile . ')!'
-                    );
-                }
+                $this->generateXmlFile($appletLanguageId, $language, $path);
             }
             $this->logger->info($appletLanguageId . ' (' . $appletDirectory . ') language xml cached.');
         }
         $this->logger->info('Applet language XMLs generated.');
+    }
+
+    private function generateXmlFile(string $appletLanguageId, string $language, string $path)
+    {
+        $xmlContent = $this->getAppletLanguageFileContent($appletLanguageId, $language);
+        $xmlFile = $path . '/lang_' . $language . '.xml';
+
+        if (file_put_contents($xmlFile, $xmlContent) !== false) {
+            $this->logger->info('OK saving ' . $xmlFile . ' was successful.');
+        } else {
+            throw new \Exception(
+                'Unable to save applet: (' . $appletLanguageId . ') language: (' . $language
+                . ') xml (' . $xmlFile . ')!'
+            );
+        }
     }
 
     private function getLanguageFlashPath(): string
