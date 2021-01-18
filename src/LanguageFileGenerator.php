@@ -49,20 +49,24 @@ class LanguageFileGenerator implements ILanguageFileGenerator
     {
         // The applications where we need to translate.
 
-
         $this->logger->info('Generating language files');
         foreach ($this->applications as $application => $languages) {
-            $this->logger->info('[APPLICATION: ' . $application . '] started');
-            foreach ($languages as $language) {
-                $this->logger->info('[APPLICATION: ' . $application . '][LANGUAGE: ' . $language . ']');
-                if ($this->getLanguageFile($application, $language)) {
-                    $this->logger->info('[APPLICATION: ' . $application . '][LANGUAGE: ' . $language . '] OK');
-                } else {
-                    throw new \Exception('Unable to generate language file!');
-                }
-            }
+            $this->generateLanguageFile($application, $languages);
         }
         $this->logger->info('Generating language files - end');
+    }
+
+    private function generateLanguageFile(string $application, array $languages): void
+    {
+        $this->logger->info('[APPLICATION: ' . $application . '] started');
+        foreach ($languages as $language) {
+            $this->logger->info('[APPLICATION: ' . $application . '][LANGUAGE: ' . $language . ']');
+            if ($this->getLanguageFile($application, $language)) {
+                $this->logger->info('[APPLICATION: ' . $application . '][LANGUAGE: ' . $language . '] OK');
+            } else {
+                throw new \Exception('Unable to generate language file!');
+            }
+        }
     }
 
     /**

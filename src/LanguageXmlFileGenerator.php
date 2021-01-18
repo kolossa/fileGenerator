@@ -49,19 +49,24 @@ class LanguageXmlFileGenerator implements ILanguageFileGenerator
         }
         foreach ($this->applets as $appletDirectory => $appletLanguageId) {
             $this->logger->info('Getting > ' . $appletLanguageId . ' (' . $appletDirectory . ') language xmls..');
-            $languages = $this->getAppletLanguages($appletLanguageId);
-            if (empty($languages)) {
-                $this->logger->warning('There are no available languages for the ' . $appletLanguageId . ' applet.');
-            } else {
-                $this->logger->info('Available languages: ' . implode(', ', $languages));
-            }
-
-            foreach ($languages as $language) {
-                $this->generateXmlFile($appletLanguageId, $language, $path);
-            }
+            $this->generateLanguageXmlFiles($appletLanguageId, $path);
             $this->logger->info($appletLanguageId . ' (' . $appletDirectory . ') language xml cached.');
         }
         $this->logger->info('Applet language XMLs generated.');
+    }
+
+    private function generateLanguageXmlFiles(string $appletLanguageId, string $path): void
+    {
+        $languages = $this->getAppletLanguages($appletLanguageId);
+        if (empty($languages)) {
+            $this->logger->warning('There are no available languages for the ' . $appletLanguageId . ' applet.');
+        } else {
+            $this->logger->info('Available languages: ' . implode(', ', $languages));
+        }
+
+        foreach ($languages as $language) {
+            $this->generateXmlFile($appletLanguageId, $language, $path);
+        }
     }
 
     private function generateXmlFile(string $appletLanguageId, string $language, string $path)
