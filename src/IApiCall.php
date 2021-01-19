@@ -14,7 +14,7 @@ interface IApiCall
      * @param string $mode
      * @param array $getParameters
      * @param array $postParameters
-     * @return array|null
+     * @return ApiCallDTO
      */
-    public function call(string $target, string $mode, array $getParameters, array $postParameters): ?array;
+    public function call(string $target, string $mode, array $getParameters, array $postParameters): ApiCallDTO;
 }

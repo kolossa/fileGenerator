@@ -94,14 +94,14 @@ class LanguageFileGenerator implements ILanguageFileGenerator
             mkdir(dirname($destination), 0755, true);
         }
 
-        if (file_put_contents($destination, $languageResponse['data']) === false) {
+        if (file_put_contents($destination, $languageResponse->getData()) === false) {
             return false;
         }
 
         return true;
     }
 
-    private function getValidFileContent(string $application, string $language): array
+    private function getValidFileContent(string $application, string $language): ApiCallDTO
     {
         $languageResponse = $this->apiCall->call(
             ApiCallAdapter::TARGET,

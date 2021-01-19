@@ -21,23 +21,23 @@ class ApiValidator
      * @throws ApiCallWrongContentException
      * @throws ApiCallWrongResponseException
      */
-    public function checkForApiErrorResult($result): void
+    public function checkForApiErrorResult(ApiCallDTO $result): void
     {
         // Error during the api call.
-        if ($result === false || !isset($result['status'])) {
+        if ($result->getStatus()==null) {
             throw new ApiCallErrorException('Error during the api call');
         }
         // Wrong response.
-        if ($result['status'] != 'OK') {
+        if ($result->getStatus() != 'OK') {
             throw new ApiCallWrongResponseException(
                 'Wrong response: '
-                . (!empty($result['error_type']) ? 'Type(' . $result['error_type'] . ') ' : '')
-                . (!empty($result['error_code']) ? 'Code(' . $result['error_code'] . ') ' : '')
-                . ((string)$result['data'])
+                . (!empty($result->getErrorType()) ? 'Type(' . $result->getErrorType() . ') ' : '')
+                . (!empty($result->getErrorType()) ? 'Code(' . $result->getErrorType() . ') ' : '')
+                . ((string)$result->getData())
             );
         }
         // Wrong content.
-        if ($result['data'] === false) {
+        if ($result->getData() === false) {
             throw new ApiCallWrongContentException('Wrong content!');
         }
     }

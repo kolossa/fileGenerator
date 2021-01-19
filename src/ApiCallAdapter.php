@@ -9,8 +9,13 @@ class ApiCallAdapter implements IApiCall
     const TARGET = 'system_api';
     const MODE = 'language_api';
 
-    public function call(string $target, string $mode, array $getParameters, array $postParameters): ?array
+    public function call(string $target, string $mode, array $getParameters, array $postParameters): ApiCallDTO
     {
-        return ApiCall::call($target, $mode, $getParameters, $postParameters);
+        $result = ApiCall::call($target, $mode, $getParameters, $postParameters);
+        $status = $result['status'] ?? null;
+        $data = $result['data'] ?? null;
+        $errorType = $result['error_type'] ?? null;
+
+        return new ApiCallDTO($status, $data, $errorType);
     }
 }

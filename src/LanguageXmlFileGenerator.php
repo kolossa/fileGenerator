@@ -47,6 +47,9 @@ class LanguageXmlFileGenerator implements ILanguageFileGenerator
         if (is_dir($path) && !is_writable($path)) {
             throw new \Exception($path . ' is not writable!');
         }
+        if(!is_dir($path)){
+            mkdir($path, 0755, true);
+        }
         foreach ($this->applets as $appletDirectory => $appletLanguageId) {
             $this->logger->info('Getting > ' . $appletLanguageId . ' (' . $appletDirectory . ') language xmls..');
             $this->generateLanguageXmlFiles($appletLanguageId, $path);
@@ -62,10 +65,9 @@ class LanguageXmlFileGenerator implements ILanguageFileGenerator
             $this->logger->warning('There are no available languages for the ' . $appletLanguageId . ' applet.');
         } else {
             $this->logger->info('Available languages: ' . implode(', ', $languages));
-        }
-
-        foreach ($languages as $language) {
-            $this->generateXmlFile($appletLanguageId, $language, $path);
+            foreach ($languages as $language) {
+                $this->generateXmlFile($appletLanguageId, $language, $path);
+            }
         }
     }
 
@@ -115,7 +117,7 @@ class LanguageXmlFileGenerator implements ILanguageFileGenerator
             throw new \Exception('Getting languages for applet (' . $applet . ') was unsuccessful ' . $e->getMessage());
         }
 
-        return $result['data'];
+        return $result->getData();
     }
 
     /**
@@ -151,6 +153,6 @@ class LanguageXmlFileGenerator implements ILanguageFileGenerator
             );
         }
 
-        return $result['data'];
+        return $result->getData();
     }
 }
