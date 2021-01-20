@@ -19,24 +19,15 @@ class LanguageFileGenerator implements ILanguageFileGenerator
 
     /**
      * LanguageFileGenerator constructor.
-     * @param array $applications
-     * @param string $systemPathRoot
-     * @param IApiCall $apiCall
-     * @param ApiValidator $apiValidator
-     * @param ILogger $logger
+     * @param LanguageFileGeneratorDTO $dto
      */
-    public function __construct(
-        array $applications,
-        string $systemPathRoot,
-        IApiCall $apiCall,
-        ApiValidator $apiValidator,
-        ILogger $logger
-    ) {
-        $this->applications = $applications;
-        $this->systemPathRoot = $systemPathRoot;
-        $this->apiCall = $apiCall;
-        $this->apiValidator = $apiValidator;
-        $this->logger = $logger;
+    public function __construct(LanguageFileGeneratorDTO $dto)
+    {
+        $this->applications = $dto->getApplications();
+        $this->systemPathRoot = $dto->getSystemPathRoot();
+        $this->apiCall = $dto->getApiCall();
+        $this->apiValidator = $dto->getApiValidator();
+        $this->logger = $dto->getLogger();
     }
 
 
@@ -76,7 +67,7 @@ class LanguageFileGenerator implements ILanguageFileGenerator
      * @param string $language The identifier of the language.
      *
      * @return bool   The success of the operation.
-     * @throws CurlException   If there was an error during the download of the language file.
+     * @throws \Exception
      *
      */
     private function getLanguageFile(string $application, string $language): bool

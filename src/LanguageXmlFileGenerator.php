@@ -18,24 +18,14 @@ class LanguageXmlFileGenerator implements ILanguageFileGenerator
 
     /**
      * LanguageXmlFileGenerator constructor.
-     * @param string $systemPathRoot
-     * @param IApiCall $apiCall
-     * @param ApiValidator $apiValidator
-     * @param array $applets
-     * @param ILogger $logger
+     * @param LanguageXmlFileGeneratorDTO $dto
      */
-    public function __construct(
-        string $systemPathRoot,
-        IApiCall $apiCall,
-        ApiValidator $apiValidator,
-        array $applets,
-        ILogger $logger
-    ) {
-        $this->systemPathRoot = $systemPathRoot;
-        $this->apiCall = $apiCall;
-        $this->apiValidator = $apiValidator;
-        $this->applets = $applets;
-        $this->logger = $logger;
+    public function __construct(LanguageXmlFileGeneratorDTO $dto) {
+        $this->systemPathRoot = $dto->getSystemPathRoot();
+        $this->apiCall = $dto->getApiCall();
+        $this->apiValidator = $dto->getApiValidator();
+        $this->applets = $dto->getApplets();
+        $this->logger = $dto->getLogger();
     }
 
 

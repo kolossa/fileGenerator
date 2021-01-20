@@ -22,16 +22,23 @@ class LanguageBatchBo
         ];
         $this->logger = new MonologAdapter();
 
-        $this->languageFileGenerator = new LanguageFileGenerator(
-            $applications, $systemPathRoot, $apiCall, $apiValidator, $this->logger
+        $languageFileGeneratorDTO = new LanguageFileGeneratorDTO(
+            $applications,
+            $systemPathRoot,
+            $apiCall,
+            $apiValidator,
+            $this->logger
         );
-        $this->languageXmlFileGenerator = new LanguageXmlFileGenerator(
+        $this->languageFileGenerator = new LanguageFileGenerator($languageFileGeneratorDTO);
+
+        $languageXmlFileGeneratorDTO = new LanguageXmlFileGeneratorDTO(
             $systemPathRoot,
             $apiCall,
             $apiValidator,
             $applets,
             $this->logger
         );
+        $this->languageXmlFileGenerator = new LanguageXmlFileGenerator($languageXmlFileGeneratorDTO);
     }
 
     /**
@@ -43,7 +50,7 @@ class LanguageBatchBo
     {
         try {
             $this->languageFileGenerator->generateLanguageFiles();
-        }catch (\Exception $e){
+        } catch (\Exception $e) {
             $this->logger->error($e->getMessage());
         }
     }
