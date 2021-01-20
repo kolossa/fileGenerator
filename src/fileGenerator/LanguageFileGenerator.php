@@ -8,7 +8,7 @@ use Language\api\ApiCallAdapter;
 use Language\api\ApiCallDTO;
 use Language\api\ApiValidator;
 use Language\api\IApiCall;
-use Language\ILogger;
+use Language\Logger\ILogger;
 
 class LanguageFileGenerator implements ILanguageFileGenerator
 {

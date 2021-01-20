@@ -6,7 +6,7 @@ namespace Language\FileGenerator;
 use Language\api\ApiCallAdapter;
 use Language\api\ApiValidator;
 use Language\api\IApiCall;
-use Language\ILogger;
+use Language\Logger\ILogger;
 
 class LanguageXmlFileGenerator implements ILanguageFileGenerator
 {

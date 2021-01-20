@@ -9,6 +9,8 @@ use Language\FileGenerator\LanguageFileGenerator;
 use Language\FileGenerator\LanguageFileGeneratorDTO;
 use Language\FileGenerator\LanguageXmlFileGenerator;
 use Language\FileGenerator\LanguageXmlFileGeneratorDTO;
+use Language\Logger\ILogger;
+use Language\Logger\MonologAdapter;
 
 /**
  * Business logic related to generating language files.
