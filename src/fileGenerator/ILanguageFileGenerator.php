@@ -1,7 +1,7 @@
 <?php
 
 
-namespace Language;
+namespace Language\FileGenerator;
 
 
 interface ILanguageFileGenerator

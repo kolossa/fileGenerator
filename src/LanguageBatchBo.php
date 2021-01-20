@@ -4,6 +4,11 @@ namespace Language;
 
 use Language\api\ApiCallAdapter;
 use Language\api\ApiValidator;
+use Language\FileGenerator\ILanguageFileGenerator;
+use Language\FileGenerator\LanguageFileGenerator;
+use Language\FileGenerator\LanguageFileGeneratorDTO;
+use Language\FileGenerator\LanguageXmlFileGenerator;
+use Language\FileGenerator\LanguageXmlFileGeneratorDTO;
 
 /**
  * Business logic related to generating language files.

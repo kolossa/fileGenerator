@@ -1,53 +1,46 @@
 <?php
 
 
-namespace Language;
+namespace Language\FileGenerator;
 
 
 use Language\api\ApiValidator;
 use Language\api\IApiCall;
+use Language\ILogger;
 
-class LanguageFileGeneratorDTO
+class LanguageXmlFileGeneratorDTO
 {
-    /**
-     * Contains the applications which ones require translations.
-     *
-     * @var array
-     */
-    private array $applications = [];
     private string $systemPathRoot;
     private IApiCall $apiCall;
     private ApiValidator $apiValidator;
+
+    /**
+     * List of the applets [directory => applet_id].
+     * @var array $applets
+     */
+    private array $applets;
     private ILogger $logger;
 
     /**
-     * LanguageFileGeneratorDTO constructor.
-     * @param array $applications
+     * LanguageXmlFileGeneratorDTO constructor.
      * @param string $systemPathRoot
      * @param IApiCall $apiCall
      * @param ApiValidator $apiValidator
+     * @param array $applets
      * @param ILogger $logger
      */
     public function __construct(
-        array $applications,
         string $systemPathRoot,
         IApiCall $apiCall,
         ApiValidator $apiValidator,
+        array $applets,
         ILogger $logger
     ) {
-        $this->applications = $applications;
         $this->systemPathRoot = $systemPathRoot;
         $this->apiCall = $apiCall;
         $this->apiValidator = $apiValidator;
+        $this->applets = $applets;
         $this->logger = $logger;
-    }
-
-    /**
-     * @return array
-     */
-    public function getApplications(): array
-    {
-        return $this->applications;
     }
 
     /**
@@ -72,6 +65,14 @@ class LanguageFileGeneratorDTO
     public function getApiValidator(): ApiValidator
     {
         return $this->apiValidator;
+    }
+
+    /**
+     * @return array
+     */
+    public function getApplets(): array
+    {
+        return $this->applets;
     }
 
     /**

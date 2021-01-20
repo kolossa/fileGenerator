@@ -1,13 +1,14 @@
 <?php
 
 
-namespace Language;
+namespace Language\FileGenerator;
 
 
 use Language\api\ApiCallAdapter;
 use Language\api\ApiCallDTO;
 use Language\api\ApiValidator;
 use Language\api\IApiCall;
+use Language\ILogger;
 
 class LanguageFileGenerator implements ILanguageFileGenerator
 {
