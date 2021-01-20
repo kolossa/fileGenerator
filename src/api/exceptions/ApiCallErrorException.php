@@ -1,7 +1,7 @@
 <?php
 
 
-namespace Language\exceptions;
+namespace Language\api\exceptions;
 
 
 class ApiCallErrorException extends \Exception

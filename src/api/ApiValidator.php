@@ -4,9 +4,9 @@
 namespace Language\api;
 
 
-use Language\exceptions\ApiCallErrorException;
-use Language\exceptions\ApiCallWrongContentException;
-use Language\exceptions\ApiCallWrongResponseException;
+use Language\api\exceptions\ApiCallErrorException;
+use Language\api\exceptions\ApiCallWrongContentException;
+use Language\api\exceptions\ApiCallWrongResponseException;
 
 class ApiValidator
 {
