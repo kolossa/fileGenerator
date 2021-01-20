@@ -4,6 +4,9 @@
 namespace Language;
 
 
+use Language\api\ApiValidator;
+use Language\api\IApiCall;
+
 class LanguageXmlFileGeneratorDTO
 {
     private string $systemPathRoot;

@@ -3,6 +3,10 @@
 
 namespace Language;
 
+use Language\api\ApiCallAdapter;
+use Language\api\ApiValidator;
+use Language\api\IApiCall;
+
 class LanguageXmlFileGenerator implements ILanguageFileGenerator
 {
     private string $systemPathRoot;

@@ -1,8 +1,10 @@
 <?php
 
 
-namespace Language;
+namespace Language\api;
 
+
+use Language\ApiCall;
 
 class ApiCallAdapter implements IApiCall
 {

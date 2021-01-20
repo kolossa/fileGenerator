@@ -2,6 +2,9 @@
 
 namespace Language;
 
+use Language\api\ApiCallAdapter;
+use Language\api\ApiValidator;
+
 /**
  * Business logic related to generating language files.
  */

@@ -1,7 +1,7 @@
 <?php
 
 
-namespace Language;
+namespace Language\api;
 
 
 use Language\exceptions\ApiCallErrorException;
